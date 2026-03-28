@@ -56,7 +56,7 @@ def load_known_faces():
     print(f"Encoded and cached {len(known_names)} face(s).")
 
 
-@app.route("/check", methods=["POST"])
+@app.route("/verify", methods=["POST"])
 def check_face():
     # Accept both raw JPEG and multipart form
     if request.content_type and "multipart" in request.content_type:
