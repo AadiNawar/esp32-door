@@ -114,7 +114,9 @@ def status():
     """Health check — also shows who is authorized."""
     return jsonify({"status": "ok", "authorized": known_names})
 
+# Load faces when app starts (works with gunicorn too)
+with app.app_context():
+    load_known_faces()
 
 if __name__ == "__main__":
-    load_known_faces()
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
