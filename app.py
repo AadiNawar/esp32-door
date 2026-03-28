@@ -58,16 +58,15 @@ def load_known_faces():
 
 @app.route("/check", methods=["POST"])
 def check_face():
-    """
-    POST a JPEG image to this endpoint.
-    Returns JSON: { "decision": "OPEN", "name": "aadi" }
-                  { "decision": "DENY", "name": "unknown" }
-    """
-    if "image" not in request.files:
-        return jsonify({"error": "No image uploaded"}), 400
+    # Accept both raw JPEG and multipart form
+    if request.content_type and "multipart" in request.content_type:
+        if "image" not in request.files:
+            return jsonify({"error": "No image"}), 400
+        image_data = request.files["image"].read()
+    else:
+        image_data = request.data  # raw JPEG bytes
 
-    file = request.files["image"]
-    image_array = np.frombuffer(file.read(), dtype=np.uint8)
+    image_array = np.frombuffer(image_data, dtype=np.uint8)
 
     import cv2
     img = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
